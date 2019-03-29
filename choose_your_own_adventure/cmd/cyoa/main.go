@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -19,11 +18,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	decoder := json.NewDecoder(file)
-	var story cyoa.Story
-
-	if err := decoder.Decode(&story); err != nil {
+	story, err := cyoa.JsonStory(file)
+	if err != nil {
 		panic(err)
 	}
 
