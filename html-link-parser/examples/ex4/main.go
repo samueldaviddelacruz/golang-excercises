@@ -12,7 +12,6 @@ var exampleHtml = `
   <a href="/dog-cat">dog cat <!-- commented text SHOULD NOT be included! --></a>
 </body>
 </html>
-
 `
 
 func main() {
