@@ -2,6 +2,7 @@ package deck
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 )
 
@@ -42,6 +43,28 @@ func TestSort(t *testing.T) {
 	}
 }
 
+func TestShuggle(t *testing.T) {
+	//make shuffle rand deterministic
+	//First call to shuffleRand.Perm(52) should be:
+	// [40 35 50 0 44....]
+	shuffleRand = rand.New(rand.NewSource(0))
+	orig := New()
+
+	first := orig[40]
+	second := orig[35]
+
+	cards := New(Shuffle)
+	if cards[0] != first {
+		t.Errorf("Expected first card to be %s .Received: %s", first, cards[0])
+
+	}
+	if cards[1] != second {
+		t.Errorf("Expected second card to be %s .Received: %s", second, cards[1])
+
+	}
+
+}
+
 func TestJokers(t *testing.T) {
 	cards := New(Jokers(3))
 	expected := 3
@@ -54,6 +77,29 @@ func TestJokers(t *testing.T) {
 
 	if count != expected {
 		t.Errorf("Expected %d jokers.Received: %d", expected, count)
+	}
+
+}
+
+func TestFilter(t *testing.T) {
+	predicate := func(card Card) bool {
+		return card.Rank == Two || card.Rank == Three
+	}
+	cards := New(Filter(predicate))
+	for _, card := range cards {
+		if card.Rank == Two || card.Rank == Three {
+			t.Error("Expected all twos and threes to be filtered out")
+		}
+	}
+
+}
+
+func TestDeck(t *testing.T) {
+	cards := New(Deck(3))
+	ranksTimesSuitsTimesDecks := 13 * 4 * 3 // 13 ranks * 4 suits * 3 decks
+	if len(cards) != ranksTimesSuitsTimesDecks {
+		t.Errorf("Expected %d cards.Received: %d", ranksTimesSuitsTimesDecks, len(cards))
+
 	}
 
 }
